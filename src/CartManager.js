@@ -5,7 +5,7 @@
 import * as fs from "node:fs/promises";
 
 
-export class CartManager {
+export class cartManager {
 
     constructor(path) {
         this.cart = [];

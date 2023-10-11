@@ -1,9 +1,9 @@
 import express from 'express';
 const router = express.Router();
-import { ProductManager } from '../productManager.js'; 
+import { productManager } from '../productManager'; 
 
 
-const productManager = new ProductManager('products.json'); 
+const productManager = new productManager('products.json'); 
 
 router.use(express.json());
 router.use(express.urlencoded({ extended: true }));

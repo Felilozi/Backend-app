@@ -2,7 +2,7 @@
 
 import * as fs from 'node:fs/promises'
 
-export class  ProductManager {
+export class  productManager {
     constructor(path) {
         this.products = [];
         this.productIdCounter = 1;

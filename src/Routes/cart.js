@@ -3,10 +3,10 @@ import express from 'express';
 const router = express.Router();
 
 // Import the ProductManager class
-import { CartManager } from '../CartManager.js'; // Adjust the import path as needed
+import { cartManager } from '../CartManager.js'; // Adjust the import path as needed
 
 // Create an instance of the ProductManager class, specifying the path to the data file
-const cartManager = new CartManager('cart.json'); // Specify the correct file path
+const cartManager = new cartManager('cart.json'); // Specify the correct file path
 
 // Middleware to parse JSON request bodies
 router.use(express.json());

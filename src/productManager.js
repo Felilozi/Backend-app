@@ -2,7 +2,7 @@
 
 import * as fs from 'node:fs/promises'
 
-export class  productManager {
+export class productManager {
     constructor(path) {
         this.products = [];
         this.productIdCounter = 1;
@@ -22,12 +22,35 @@ export class  productManager {
 
 
     }
+    async WriteFile(productToWrite) {
+        try {
+            // Asynchronous code here
+            if (productToWrite) {
+                await fs.writeFile(this.path, JSON.stringify(productToWrite));
+            } else {
+                await fs.unlink(this.path)
+            }
 
-    addProduct(title, description, price, thumbnail, code, stock,status,category) {
+
+        } catch (error) {
+            // Handle errors
+            console.error('An error occurred:', this.errors.ERROR_WRITING_FILE);
+            throw error; // Optionally, you can re-throw the error for further handling
+        }
+    }
+
+    async addProduct(title, description, price, thumbnail, code, stock,status,category) {
         if (!title || !description || !price  || !code || !stock || !status || !category) {
             throw error(this.error.AddError);
             ;
         }
+        const data = JSON.parse(await fs.readFile(this.path, 'utf-8'))
+        if (data.length !== 0 && this.products.length === 0) {
+            this.products = [...data];
+            this.productIdCounter += this.products[this.products.length - 1].id;
+            this.productIdCounter ++
+        }
+
 
         if (this.products.some(product => product.code === code)) {
             throw error(this.error.GetError);
@@ -120,6 +143,8 @@ export class  productManager {
             if (productIndex === -1) {
                 throw new Error(this.error.UpError)
             }
+
+            
             productosParse.splice(productIndex, 1);
             fs.writeFile(this.path, JSON.stringify(productosParse));
             return this.funciona.deleteFunciona

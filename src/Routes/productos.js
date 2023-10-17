@@ -1,9 +1,8 @@
 import express from 'express';
 const router = express.Router();
-import { productManager } from '../productManager'; 
+import { productManager } from '../productManager.js';
 
-
-const productManager = new productManager('products.json'); 
+const productoManager = new productManager('products.json'); 
 
 router.use(express.json());
 router.use(express.urlencoded({ extended: true }));
@@ -11,12 +10,12 @@ router.use(express.urlencoded({ extended: true }));
 
 router.get('/', async (req, res) => {
     try {
-        const products = await productManager.getProducts();
+        const products = await productoManager.getProducts();
         const limit = parseInt(req.query.limit, 10);
         if (!isNaN(limit)) {
-            res.json(JSON.parse(products.slice(0, limit)))
+            res.json(products.slice(0, limit))
         } else {
-            res.json(JSON.parse(products));
+            res.json(products);
         }
     } catch (error) {
         res.status(500).json({ error: 'Internal Server Error' });
@@ -32,10 +31,10 @@ router.get('/:id', async (req, res) => {
     }
 
     try {
-        const product = await productManager.getProductById(productId);
+        const product = await productoManager.getProductById(productId);
         res.json(product);
     } catch (error) {
-        if (error.message === productManager.error.UpError) {
+        if (error.message === productoManager.error.UpError) {
             res.status(404).json({ error: 'Product not found' });
         } else {
             res.status(500).json({ error: 'Internal Server Error' });
@@ -48,7 +47,7 @@ router.post('/', async (req, res) => {
     const { title, description, price, thumbnails, code, stock, status, category } = req.body;
 
     try {
-        productManager.addProduct(title, description, price, thumbnails, code, stock, status, category);
+        productoManager.addProduct(title, description, price, thumbnails, code, stock, status, category);
         res.status(201).json({ message: 'Product created successfully' });
     } catch (error) {
         if (error.message === 'El producto ya existe') {
@@ -69,10 +68,10 @@ router.put('/:pid', async (req, res) => {
     const { fieldToUpdate, newValue } = req.body;
 
     try {
-        const message = await productManager.updateProduct(productId, fieldToUpdate, newValue);
+        const message = await productoManager.updateProduct(productId, fieldToUpdate, newValue);
         res.json({ message });
     } catch (error) {
-        if (error.message === productManager.error.UpError) {
+        if (error.message === productoManager.error.UpError) {
             res.status(404).json({ error: 'No se encontro el producto ' });
         } else {
             res.status(500).json({ error: 'Error de servidor ' });
@@ -89,10 +88,10 @@ router.delete('/:pid', async (req, res) => {
     }
 
     try {
-        const message = await productManager.deleteProduct(productId);
+        const message = await productoManager.deleteProduct(productId);
         res.json({ message });
     } catch (error) {
-        if (error.message === productManager.error.UpError) {
+        if (error.message === productoManager.error.UpError) {
             res.status(404).json({ error: 'Product not found' });
         } else {
             res.status(500).json({ error: 'Internal Server Error' });
